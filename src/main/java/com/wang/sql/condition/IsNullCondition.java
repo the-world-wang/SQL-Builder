@@ -16,7 +16,7 @@ public class IsNullCondition extends AbstractCondition {
         StringBuilder sb = new StringBuilder();
         sb.append(field.getName());
         sb.append(" ");
-        sb.append(Operator.isNull.getOperator());
+        sb.append(Comparator.isNull.getComparator());
         sb.append(" ");
         sb.append(getConditionChainSQL());
         return sb.toString();

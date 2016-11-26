@@ -3,7 +3,7 @@ package com.wang.sql.field;
 import com.wang.sql.condition.ComparedCondition;
 import com.wang.sql.condition.Condition;
 import com.wang.sql.condition.IsNullCondition;
-import com.wang.sql.condition.Operator;
+import com.wang.sql.condition.Comparator;
 
 /**
  * Created by paopao on 16/11/22.
@@ -35,28 +35,36 @@ public class Field {
         return name;
     }
 
-    public Condition is(String str) {
-        return new ComparedCondition(this, str, Operator.equal);
+    public Condition equals(String str) {
+        return new ComparedCondition(this, str, Comparator.equals);
+    }
+
+    public Condition notEquals(String str) {
+        return new ComparedCondition(this, str, Comparator.notEquals);
     }
 
     public Condition gt(String str) {
-        return new ComparedCondition(this, str, Operator.gt);
+        return new ComparedCondition(this, str, Comparator.gt);
     }
 
     public Condition gte(String str) {
-        return new ComparedCondition(this, str, Operator.gte);
+        return new ComparedCondition(this, str, Comparator.gte);
     }
 
     public Condition lt(String str) {
-        return new ComparedCondition(this, str, Operator.lt);
+        return new ComparedCondition(this, str, Comparator.lt);
     }
 
     public Condition lte(String str) {
-        return new ComparedCondition(this, str, Operator.lte);
+        return new ComparedCondition(this, str, Comparator.lte);
     }
 
     public Condition like(String str) {
-        return new ComparedCondition(this, str, Operator.like);
+        return new ComparedCondition(this, str, Comparator.like);
+    }
+
+    public Condition notLike(String str) {
+        return new ComparedCondition(this, str, Comparator.notLike);
     }
 
     public Condition isNull() {
