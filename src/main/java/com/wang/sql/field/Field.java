@@ -86,6 +86,6 @@ public class Field {
         if (alias == null) {
             return name;
         }
-        return name + " as " + alias;
+        return name + " " + alias;
     }
 }

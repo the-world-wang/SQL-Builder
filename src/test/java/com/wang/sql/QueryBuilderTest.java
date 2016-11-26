@@ -44,4 +44,15 @@ public class QueryBuilderTest {
                 .getSQL();
         System.out.println(sql);
     }
+
+    @Test
+    public void testJoin() {
+        String sql = select("*")
+                .from(field("store").as("s"))
+                .join(field("merchant").as("m")).on(field("s.id").equals("m.id"))
+                .join(field("terminal").as("t")).on(field("t.id").equals("m.id"))
+                .where(field("t.id").equals("1"))
+                .getSQL();
+        System.out.println(sql);
+    }
 }

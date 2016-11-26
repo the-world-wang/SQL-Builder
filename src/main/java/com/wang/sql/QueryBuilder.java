@@ -6,7 +6,6 @@ import com.wang.sql.field.Sort;
 
 import java.util.*;
 
-import static com.wang.sql.field.Field.distinct;
 import static com.wang.sql.field.Field.field;
 
 /**
@@ -16,7 +15,8 @@ public class QueryBuilder {
 
     private Set<Field> columns = new HashSet<>();
     private Set<Field> tables = new HashSet<>();
-    private Set<Condition> conditions = new HashSet<>();
+    private Set<JoinBuilder> joins;
+    private Set<Condition> where;
     private Long limit;
     private Long offset;
     private Map<Sort, Field> orderBy;
@@ -52,8 +52,24 @@ public class QueryBuilder {
         return this;
     }
 
+    public JoinBuilder join(Field field) {
+        if (joins == null) {
+            joins = new HashSet<>();
+        }
+        JoinBuilder join = new JoinBuilder(this, field);
+        joins.add(join);
+        return join;
+    }
+
+    public JoinBuilder join(String field) {
+        return join(field(field));
+    }
+
     public QueryBuilder where(Condition... conditions) {
-        this.conditions.addAll(Arrays.asList(conditions));
+        if (where == null) {
+            where = new HashSet<>();
+        }
+        where.addAll(Arrays.asList(conditions));
         return this;
     }
 
@@ -104,17 +120,28 @@ public class QueryBuilder {
         sb.append("SELECT ");
         for (Field column : columns) {
             sb.append(column);
+            sb.append("\n");
         }
         sb.append(" FROM ");
         for (Field table : tables) {
-            sb.append(table.toString());
+            sb.append(table);
+            sb.append("\n");
         }
-        sb.append(" WHERE (");
-        for (Condition condition : conditions) {
-            // TODO and
-            sb.append(condition.toString());
+        if (joins != null) {
+            for (JoinBuilder join : joins) {
+                sb.append(" JOIN ");
+                sb.append(join);
+                sb.append("\n");
+            }
         }
-        sb.append(")");
+        if (where != null) {
+            sb.append(" WHERE (");
+            for (Condition condition : where) {
+                // TODO and
+                sb.append(condition.toString());
+            }
+            sb.append(")\n");
+        }
         if (groupBy != null) {
             sb.append(" GROUP BY ");
             for (Field field : groupBy) {
