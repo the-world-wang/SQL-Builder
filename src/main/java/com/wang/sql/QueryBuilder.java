@@ -134,25 +134,4 @@ public class QueryBuilder {
         }
         return sb.toString();
     }
-
-
-    public static void main(String[] args) {
-        String result = select("*")
-                .from("merchant")
-                .where(field("sn").is("123456").and(field("id").is("123456")))
-                .orderBy("ctime", Sort.DESC)
-                .limit(5, 10).getSQL();
-
-        String result2 = select(distinct("name"))
-                .from("merchant")
-                .where(field("sn").is("123456")
-                        .and(field("id").is("123456")).and(field("name").like("123"))
-                        .or(field("name").gte("123"))
-                        .or(field("name").isNull()))
-                .groupBy("name")
-                .orderBy("ctime", Sort.DESC)
-                .limit(5, 10).getSQL();
-        System.out.println(result);
-        System.out.println(result2);
-    }
 }

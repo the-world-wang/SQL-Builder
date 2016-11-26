@@ -11,7 +11,7 @@ import java.util.Map;
 public abstract class AbstractCondition implements Condition {
 
     protected Map<Logic, Condition> conditionChain = new HashMap<>();
-    protected Operator operator;
+    protected Comparator comparator;
     protected Field field;
     protected String expect;
 
@@ -32,7 +32,7 @@ public abstract class AbstractCondition implements Condition {
         StringBuilder sb = new StringBuilder();
         sb.append(field.toString());
         sb.append(" ");
-        sb.append(operator.getOperator());
+        sb.append(comparator.getComparator());
         sb.append(" ");
         sb.append(expect);
         sb.append(getConditionChainSQL());
