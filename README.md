@@ -25,8 +25,8 @@ Thanks to jooq, I was inspired to write this code.
 - distinct
 
 # TODO
-- [ ] join
-- [ ] clause
+- [x] join
+- [x] clause
 - [ ] having
 - [ ] count
 - [ ] max,avg,min..etc
