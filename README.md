@@ -1,2 +1,2 @@
 # SQL-Builder
-without any dependency, just build SQL
+Thanks to jooq, I was inspired to write this code.
