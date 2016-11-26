@@ -1,9 +1,9 @@
 package com.wang.sql.field;
 
-import com.wang.sql.condition.ComparedCondition;
-import com.wang.sql.condition.Condition;
-import com.wang.sql.condition.IsNullCondition;
-import com.wang.sql.condition.Comparator;
+import com.wang.sql.QueryBuilder;
+import com.wang.sql.condition.*;
+
+import java.util.Collection;
 
 /**
  * Created by paopao on 16/11/22.
@@ -69,6 +69,14 @@ public class Field {
 
     public Condition isNull() {
         return new IsNullCondition(this);
+    }
+
+    public Condition in(Collection values) {
+        return new InCondition(this, values);
+    }
+
+    public Condition in(QueryBuilder query) {
+        return new InCondition(this, query);
     }
 
     public String toString() {

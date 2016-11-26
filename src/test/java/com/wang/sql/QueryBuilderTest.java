@@ -3,6 +3,8 @@ package com.wang.sql;
 import com.wang.sql.field.Sort;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static com.wang.sql.QueryBuilder.select;
 import static com.wang.sql.field.Field.distinct;
 import static com.wang.sql.field.Field.field;
@@ -25,11 +27,21 @@ public class QueryBuilderTest {
                 .where(field("sn").equals("123456")
                         .and(field("id").equals("123456")).and(field("name").like("123"))
                         .or(field("name").gte("123"))
-                        .or(field("name").isNull()))
+                        .or(field("name").isNull()).and(field("sn").in(Arrays.asList("1", "2"))))
                 .groupBy("name")
                 .orderBy("ctime", Sort.DESC)
                 .limit(5, 10).getSQL();
         System.out.println(result);
         System.out.println(result2);
+    }
+
+    @Test
+    public void testIn() {
+        String sql = select("*")
+                .from("store")
+                .where(field("merchant_id").in(
+                        select("id").from("merchant").where(field("name").isNull())))
+                .getSQL();
+        System.out.println(sql);
     }
 }
