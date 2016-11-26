@@ -1,4 +1,4 @@
-package com.wang.sql;
+package com.wang.sql.field;
 
 /**
  * Created by paopao on 16/11/26.

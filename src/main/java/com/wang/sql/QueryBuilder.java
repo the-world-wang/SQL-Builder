@@ -1,10 +1,13 @@
 package com.wang.sql;
 
 import com.wang.sql.condition.Condition;
+import com.wang.sql.field.Field;
+import com.wang.sql.field.Sort;
 
 import java.util.*;
 
-import static com.wang.sql.Field.field;
+import static com.wang.sql.field.Field.distinct;
+import static com.wang.sql.field.Field.field;
 
 /**
  * Created by paopao on 16/11/26.
@@ -100,7 +103,7 @@ public class QueryBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
         for (Field column : columns) {
-            sb.append(column.toString());
+            sb.append(column);
         }
         sb.append(" FROM ");
         for (Field table : tables) {
@@ -108,25 +111,26 @@ public class QueryBuilder {
         }
         sb.append(" WHERE (");
         for (Condition condition : conditions) {
+            // TODO and
             sb.append(condition.toString());
         }
         sb.append(")");
         if (groupBy != null) {
             sb.append(" GROUP BY ");
             for (Field field : groupBy) {
-                sb.append(field.name);
+                sb.append(field.getName());
             }
         }
         if (orderBy != null) {
             for (Map.Entry<Sort, Field> order : orderBy.entrySet()) {
                 sb.append(" ORDER BY ");
-                sb.append(order.getValue().name);
+                sb.append(order.getValue().getName());
                 sb.append(" ");
                 sb.append(order.getKey().name());
             }
         }
         if (limit != null) {
-            sb.append(String.format(" limit (%d,%d) ", offset, limit));
+            sb.append(String.format(" limit %d,%d", offset, limit));
         }
         return sb.toString();
     }
@@ -139,9 +143,12 @@ public class QueryBuilder {
                 .orderBy("ctime", Sort.DESC)
                 .limit(5, 10).getSQL();
 
-        String result2 = select(field("name"))
+        String result2 = select(distinct("name"))
                 .from("merchant")
-                .where(field("sn").is("123456").or(field("name").is("123")))
+                .where(field("sn").is("123456")
+                        .and(field("id").is("123456")).and(field("name").like("123"))
+                        .or(field("name").gte("123"))
+                        .or(field("name").isNull()))
                 .groupBy("name")
                 .orderBy("ctime", Sort.DESC)
                 .limit(5, 10).getSQL();

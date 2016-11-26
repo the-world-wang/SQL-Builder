@@ -1,5 +1,7 @@
 package com.wang.sql.condition;
 
+import com.wang.sql.field.Field;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,9 @@ import java.util.Map;
 public abstract class AbstractCondition implements Condition {
 
     protected Map<Logic, Condition> conditionChain = new HashMap<>();
+    protected Operator operator;
+    protected Field field;
+    protected String expect;
 
     @Override
     public Condition and(Condition other) {
@@ -24,6 +29,17 @@ public abstract class AbstractCondition implements Condition {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(field.toString());
+        sb.append(" ");
+        sb.append(operator.getOperator());
+        sb.append(" ");
+        sb.append(expect);
+        sb.append(getConditionChainSQL());
+        return sb.toString();
+    }
+
+    protected String getConditionChainSQL() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Logic, Condition> entry : conditionChain.entrySet()) {
             sb.append(" ");
