@@ -18,14 +18,14 @@ public class QueryBuilderTest {
     public void testSelect() {
         String result = select("*")
                 .from("merchant")
-                .where(field("sn").equals("123456").and(field("id").equals("123456")))
+                .where(field("sn").is("123456").and(field("id").is("123456")))
                 .orderBy("ctime", Sort.DESC)
                 .limit(5, 10).getSQL();
 
         String result2 = select(distinct("name"))
                 .from("merchant")
-                .where(field("sn").equals("123456")
-                        .and(field("id").equals("123456")).and(field("name").like("123"))
+                .where(field("sn").is("123456")
+                        .and(field("id").is("123456")).and(field("name").like("123"))
                         .or(field("name").gte("123"))
                         .or(field("name").isNull()).and(field("sn").in(Arrays.asList("1", "2"))))
                 .groupBy("name")
@@ -49,9 +49,9 @@ public class QueryBuilderTest {
     public void testJoin() {
         String sql = select("*")
                 .from(field("store").as("s"))
-                .join(field("merchant").as("m")).on(field("s.id").equals("m.id"))
-                .join(field("terminal").as("t")).on(field("t.id").equals("m.id"))
-                .where(field("t.id").equals("1"))
+                .join(field("merchant").as("m")).on(field("s.id").is("m.id"))
+                .join(field("terminal").as("t")).on(field("t.id").is("m.id"))
+                .where(field("t.id").is("1"))
                 .getSQL();
         System.out.println(sql);
     }

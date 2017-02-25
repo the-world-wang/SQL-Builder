@@ -35,7 +35,7 @@ public class Field {
         return name;
     }
 
-    public Condition equals(String str) {
+    public Condition is(String str) {
         return new ComparedCondition(this, str, Comparator.equals);
     }
 
