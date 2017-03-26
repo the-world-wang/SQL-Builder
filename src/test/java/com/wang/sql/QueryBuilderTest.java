@@ -16,43 +16,48 @@ public class QueryBuilderTest {
 
     @Test
     public void testSelect() {
-        String result = select("*")
+        QueryBuilder builder = select("*")
                 .from("merchant")
-                .where(field("sn").equals("123456").and(field("id").equals("123456")))
+                .where(field("sn").eq("1111111").and(field("id").eq("123456")))
                 .orderBy("ctime", Sort.DESC)
-                .limit(5, 10).getSQL();
+                .limit(5, 10);
+        String SQL1 = builder.getSQL();
+        Object[] args = builder.getArgs();
 
-        String result2 = select(distinct("name"))
+        QueryBuilder builder2 = select(distinct("name"))
                 .from("merchant")
-                .where(field("sn").equals("123456")
-                        .and(field("id").equals("123456")).and(field("name").like("123"))
+                .where(field("sn").eq("123456")
+                        .and(field("id").eq("123456")).and(field("name").like("123"))
                         .or(field("name").gte("123"))
                         .or(field("name").isNull()).and(field("sn").in(Arrays.asList("1", "2"))))
                 .groupBy("name")
                 .orderBy("ctime", Sort.DESC)
-                .limit(5, 10).getSQL();
-        System.out.println(result);
-        System.out.println(result2);
+                .limit(5, 10);
+        String SQL2 = builder2.getSQL();
+        Object[] args2 = builder2.getArgs();
+        System.out.println(SQL1);
+        System.out.println(SQL2);
     }
 
     @Test
     public void testIn() {
-        String sql = select("*")
+        QueryBuilder builder = select("*")
                 .from("store")
                 .where(field("merchant_id").in(
-                        select("id").from("merchant").where(field("name").isNull())))
-                .getSQL();
-        System.out.println(sql);
+                        select("id").from("merchant").where(field("name").isNull())));
+        Object[] args = builder.getArgs();
+        System.out.println(builder.getSQL());
     }
 
     @Test
     public void testJoin() {
-        String sql = select("*")
+        QueryBuilder builder = select("*")
                 .from(field("store").as("s"))
-                .join(field("merchant").as("m")).on(field("s.id").equals("m.id"))
-                .join(field("terminal").as("t")).on(field("t.id").equals("m.id"))
-                .where(field("t.id").equals("1"))
-                .getSQL();
-        System.out.println(sql);
+                .join(field("merchant").as("m")).on(field("s.id").eq("m.id"))
+                .join(field("terminal").as("t")).on(field("t.id").eq("m.id"))
+                .where(field("t.id").eq("1"));
+        String SQL = builder.getSQL();
+        Object[] args = builder.getArgs();
+        System.out.println(args);
     }
 }

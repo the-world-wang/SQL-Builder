@@ -7,9 +7,10 @@ import com.wang.sql.field.Field;
  */
 public class ComparedCondition extends AbstractCondition {
 
-    public ComparedCondition(Field field, String expect, Comparator comparator) {
+    public ComparedCondition(Field field, Object expect, Comparator comparator) {
         this.field = field;
         this.expect = expect;
+        this.args.add(expect);
         this.comparator = comparator;
     }
 }

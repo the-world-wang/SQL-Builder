@@ -2,39 +2,49 @@ package com.wang.sql.condition;
 
 import com.wang.sql.field.Field;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by paopao on 16/11/26.
  */
 public abstract class AbstractCondition implements Condition {
 
-    protected Map<Logic, Condition> conditionChain = new HashMap<>();
+    protected LinkedHashMap<Logic, Condition> conditionChain = new LinkedHashMap<>();
     protected Comparator comparator;
     protected Field field;
-    protected String expect;
+    protected Object expect;
+    protected Collection<Object> args = new ArrayList<>();
 
     @Override
     public Condition and(Condition other) {
         conditionChain.put(Logic.AND, other);
+        appendArgs(other);
         return this;
     }
 
     @Override
     public Condition or(Condition other) {
         conditionChain.put(Logic.OR, other);
+        appendArgs(other);
         return this;
     }
 
     @Override
-    public String toString() {
+    public Collection<Object> getArgs() {
+        return args;
+    }
+
+    private void appendArgs(Condition condition) {
+        args.addAll(condition.getArgs());
+    }
+
+    @Override
+    public String getSQL() {
         StringBuilder sb = new StringBuilder();
         sb.append(field.toString());
         sb.append(" ");
         sb.append(comparator.getComparator());
-        sb.append(" ");
-        sb.append(expect);
+        sb.append(" ? ");
         sb.append(getConditionChainSQL());
         return sb.toString();
     }
