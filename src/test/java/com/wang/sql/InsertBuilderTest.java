@@ -1,7 +1,7 @@
 package com.wang.sql;
 
 import com.google.common.collect.Sets;
-import com.wang.sql.mode.Foo;
+import com.wang.sql.model.Foo;
 import org.junit.Test;
 
 import static com.wang.sql.InsertBuilder.*;
@@ -13,11 +13,11 @@ public class InsertBuilderTest {
 
     @Test
     public void testInsert() {
-        insertInto("foo")
-                .withClass(Foo.class)
+        Foo foo = new Foo();
+        InsertBuilder builder = insertInto(foo)
                 .withCamelCase(true)
-                .include(Sets.newHashSet("name"))
-                .exclude(Sets.newHashSet("name", "aa"))
-                .getSQL();
+//                .include(Sets.newHashSet("name"))
+                .exclude(Sets.newHashSet("name", "aa"));
+        System.out.println(builder.getSQL());
     }
 }

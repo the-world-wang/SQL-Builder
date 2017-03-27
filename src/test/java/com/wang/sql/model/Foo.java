@@ -1,4 +1,4 @@
-package com.wang.sql.mode;
+package com.wang.sql.model;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import java.util.Date;
 public class Foo {
 
     private String name;
-    private int age;
+    private Integer age;
     private Date birth;
     private String streetAddress;
 
@@ -20,11 +20,11 @@ public class Foo {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

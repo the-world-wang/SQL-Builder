@@ -1,6 +1,6 @@
 package com.wang.sql;
 
-import com.wang.sql.mode.Foo;
+import com.wang.sql.model.Foo;
 import org.junit.Test;
 
 import static com.wang.sql.UpdateBuilder.update;
@@ -13,14 +13,15 @@ public class UpdateBuilderTest {
 
     @Test
     public void testUpdate() {
-        System.out.println(update("foo")
-                .withClass(Foo.class)
-                .where(field("id").is("name"))
-                .getSQL());
+        Foo foo = new Foo();
+        UpdateBuilder builder = update(foo)
+                .where(field("id").is("1"));
+        String SQL = builder.getSQL();
+        Object[] args = builder.getArgs();
+        System.out.println(SQL);
     }
 
     @Test
-    public void testUpdate2(){
-        update("foo").set
+    public void testUpdate2() {
     }
 }

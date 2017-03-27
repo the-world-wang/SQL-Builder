@@ -16,7 +16,7 @@ public class QueryBuilderTest {
 
     @Test
     public void testSelect() {
-        QueryBuilder builder = select("*")
+        QueryBuilder builder = select("id", "name")
                 .from("merchant")
                 .where(field("sn").is("1111111").and(field("id").is("123456")))
                 .orderBy("ctime", Sort.DESC)

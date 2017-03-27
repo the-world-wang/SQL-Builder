@@ -1,12 +1,14 @@
 package com.wang.sql;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import static com.google.common.base.CaseFormat.*;
 
 /**
  * Created by wanghao on 17/1/15.
@@ -14,23 +16,20 @@ import static com.google.common.base.CaseFormat.*;
 public class InsertBuilder {
 
     private String tableName;
-    private Class clazz;
+    private Object obj;
     private String insertSQL;
     private boolean isCamelCase = false;
     private Set<String> include;
     private Set<String> exclude;
+    private Collection<Object> args = new ArrayList<>();
 
-    public InsertBuilder(String tableName) {
-        this.tableName = tableName;
+    public InsertBuilder(Object obj) {
+        this.obj = obj;
+        this.tableName = obj.getClass().getSimpleName().toLowerCase();
     }
 
-    public static InsertBuilder insertInto(String tableName) {
-        return new InsertBuilder(tableName);
-    }
-
-    public InsertBuilder withClass(Class clazz) {
-        this.clazz = clazz;
-        return this;
+    public static InsertBuilder insertInto(Object obj) {
+        return new InsertBuilder(obj);
     }
 
     public InsertBuilder withCamelCase(boolean isCamelCase) {
@@ -61,45 +60,52 @@ public class InsertBuilder {
     }
 
     private StringBuilder convertFromBean(StringBuilder sb) {
-        Object value = null;
-        try {
-            value = clazz.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Map<String, Object> result = JsonUtils.mapper.convertValue(value, new TypeReference<Map<String, Object>>() {
-        });
-        Set<String> allKeys = result.keySet();
-        Set<String> keys = null;
+        Map<String, Object> model = JsonUtils.convertToMap(obj);
+        Set<String> allKeys = model.keySet();
+        Set<String> keys = allKeys;
         if (exclude != null) {
             keys = Sets.difference(allKeys, exclude);
         }
         if (include != null) {
             keys = Sets.intersection(allKeys, include);
         }
-        if (keys == null) {
-            keys = allKeys;
+        if (isCamelCase) {
+            // TODO isCamelCase
         }
-        int index = 0;
-        int entrySize = keys.size();
-        for (String key : keys) {
-            if (isCamelCase) {
-                sb.append(LOWER_CAMEL.to(LOWER_UNDERSCORE, key));
-            } else {
-                sb.append(key);
-            }
-            if (index < (entrySize - 1)) {
-                sb.append(",");
-            }
-            index++;
-        }
-        sb.append(") values(");
-        for (int i = 0; i < index; i++) {
+        Map<String, Object> argsMap = Maps.filterKeys(model, new InsertPredicate<>(keys));
+        args.addAll(argsMap.values());
+        String join = Joiner.on(",").join(keys);
+        sb.append(join).append(") values(");
+        int size = keys.size();
+        for (int i = 0; i < size; i++) {
             sb.append("?,");
-            if (i == index - 1) {
+            if (i == size - 1) {
                 sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(",") + 1, "");
             }
         }
         return sb;
+    }
+
+    public Object[] getArgs() {
+        return args.toArray();
+    }
+
+    public static class InsertPredicate<T> implements Predicate<T> {
+
+        private Set<T> keys;
+
+        private InsertPredicate(Set<T> keys) {
+            this.keys = keys;
+        }
+
+        @Override
+        public boolean apply(T input) {
+            return keys.contains(input);
+        }
+
+        @Override
+        public boolean test(T input) {
+            return apply(input);
+        }
     }
 }
