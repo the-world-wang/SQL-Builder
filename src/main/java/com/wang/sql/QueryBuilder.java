@@ -15,6 +15,7 @@ public class QueryBuilder {
 
     private Set<Field> columns = new HashSet<>();
     private Set<Field> tables = new HashSet<>();
+    private List<Object> args = new ArrayList<>();
     private Set<JoinBuilder> joins;
     private Set<Condition> where;
     private Long limit;
@@ -70,6 +71,9 @@ public class QueryBuilder {
             where = new HashSet<>();
         }
         where.addAll(Arrays.asList(conditions));
+        for (Condition condition : conditions) {
+            args.addAll(condition.getArgs());
+        }
         return this;
     }
 
@@ -82,6 +86,8 @@ public class QueryBuilder {
     public QueryBuilder limit(long offset, long limit) {
         this.offset = offset;
         this.limit = limit;
+        args.add(offset);
+        args.add(limit);
         return this;
     }
 
@@ -138,7 +144,7 @@ public class QueryBuilder {
             sb.append(" WHERE (");
             for (Condition condition : where) {
                 // TODO and
-                sb.append(condition.toString());
+                sb.append(condition.getSQL());
             }
             sb.append(")\n");
         }
@@ -157,8 +163,12 @@ public class QueryBuilder {
             }
         }
         if (limit != null) {
-            sb.append(String.format(" limit %d,%d", offset, limit));
+            sb.append(" limit ?,?");
         }
         return sb.toString();
+    }
+
+    public Object[] getArgs() {
+        return args.toArray();
     }
 }
