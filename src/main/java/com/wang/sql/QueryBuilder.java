@@ -124,15 +124,10 @@ public class QueryBuilder {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
-        for (Field column : columns) {
-            sb.append(column);
-            sb.append("\n");
-        }
+        sb.append(JoinerUtils.commaJoiner.join(columns));
         sb.append(" FROM ");
-        for (Field table : tables) {
-            sb.append(table);
-            sb.append("\n");
-        }
+        sb.append(JoinerUtils.commaJoiner.join(tables));
+
         if (joins != null) {
             for (JoinBuilder join : joins) {
                 sb.append(" JOIN ");

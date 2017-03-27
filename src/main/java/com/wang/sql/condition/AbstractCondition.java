@@ -55,7 +55,7 @@ public abstract class AbstractCondition implements Condition {
             sb.append(" ");
             sb.append(entry.getKey());
             sb.append(" ");
-            sb.append(entry.getValue());
+            sb.append(entry.getValue().getSQL());
         }
         return sb.toString();
     }

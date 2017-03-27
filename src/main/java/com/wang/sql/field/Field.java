@@ -35,7 +35,7 @@ public class Field {
         return name;
     }
 
-    public Condition eq(Object obj) {
+    public Condition is(Object obj) {
         return new ComparedCondition(this, obj, Comparator.equals);
     }
 
