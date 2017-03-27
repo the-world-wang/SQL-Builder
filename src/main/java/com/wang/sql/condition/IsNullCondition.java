@@ -12,7 +12,7 @@ public class IsNullCondition extends AbstractCondition {
     }
 
     @Override
-    public String toString() {
+    public String getSQL() {
         StringBuilder sb = new StringBuilder();
         sb.append(field.getName());
         sb.append(" ");

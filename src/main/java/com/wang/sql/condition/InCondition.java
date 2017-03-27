@@ -10,12 +10,13 @@ import java.util.Collection;
  */
 public class InCondition extends AbstractCondition {
 
-    private Collection<String> values;
+    private Collection<Object> values;
     private QueryBuilder query;
 
-    public InCondition(Field field, Collection<String> values) {
+    public InCondition(Field field, Collection<Object> values) {
         this.field = field;
         this.values = values;
+        this.args.addAll(values);
     }
 
     public InCondition(Field field, QueryBuilder query) {
@@ -24,7 +25,7 @@ public class InCondition extends AbstractCondition {
     }
 
     @Override
-    public String toString() {
+    public String getSQL() {
         StringBuilder sb = new StringBuilder();
         sb.append(field.toString());
         sb.append(" ");
@@ -33,8 +34,8 @@ public class InCondition extends AbstractCondition {
         if (query != null) {
             sb.append(query.getSQL());
         } else {
-            for (String value : values) {
-                sb.append(value);
+            for (Object value : values) {
+                sb.append(String.valueOf(value));
                 sb.append(",");
             }
             sb.delete(sb.length() - 1, sb.length());

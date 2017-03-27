@@ -35,36 +35,36 @@ public class Field {
         return name;
     }
 
-    public Condition equals(String str) {
-        return new ComparedCondition(this, str, Comparator.equals);
+    public Condition is(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.equals);
     }
 
-    public Condition notEquals(String str) {
-        return new ComparedCondition(this, str, Comparator.notEquals);
+    public Condition notEquals(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.notEquals);
     }
 
-    public Condition gt(String str) {
-        return new ComparedCondition(this, str, Comparator.gt);
+    public Condition gt(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.gt);
     }
 
-    public Condition gte(String str) {
-        return new ComparedCondition(this, str, Comparator.gte);
+    public Condition gte(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.gte);
     }
 
-    public Condition lt(String str) {
-        return new ComparedCondition(this, str, Comparator.lt);
+    public Condition lt(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.lt);
     }
 
-    public Condition lte(String str) {
-        return new ComparedCondition(this, str, Comparator.lte);
+    public Condition lte(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.lte);
     }
 
-    public Condition like(String str) {
-        return new ComparedCondition(this, str, Comparator.like);
+    public Condition like(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.like);
     }
 
-    public Condition notLike(String str) {
-        return new ComparedCondition(this, str, Comparator.notLike);
+    public Condition notLike(Object obj) {
+        return new ComparedCondition(this, obj, Comparator.notLike);
     }
 
     public Condition isNull() {
